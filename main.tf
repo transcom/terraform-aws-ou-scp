@@ -9,6 +9,7 @@ locals {
   # and the statement will not be included.
   deny_leaving_orgs_statement                = var.deny_leaving_orgs ? [""] : []
   deny_creating_iam_users_statement          = var.deny_creating_iam_users ? [""] : []
+  deny_creating_iam_users_only_statement     = var.deny_creating_iam_only_users ? [""] : []
   deny_deleting_kms_keys_statement           = var.deny_deleting_kms_keys ? [""] : []
   deny_deleting_route53_zones_statement      = var.deny_deleting_route53_zones ? [""] : []
   deny_deleting_cloudwatch_logs_statement    = var.deny_deleting_cloudwatch_logs ? [""] : []
@@ -58,6 +59,20 @@ data "aws_iam_policy_document" "combined_policy_block" {
       resources = ["*"]
     }
   }
+
+
+  dynamic "statement" {
+    for_each = local.deny_creating_iam_users_only_statement
+    content {
+      sid    = "DenyCreatingIAMUsers"
+      effect = "Deny"
+      actions = [
+        "iam:CreateUser"
+      ]
+      resources = ["*"]
+    }
+  }
+
 
   #
   # Deny deleting KMS Keys

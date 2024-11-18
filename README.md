@@ -128,6 +128,7 @@ No modules.
 | allowed\_ec2\_instance\_types | EC2 instances types allowed for use | `list(string)` | ```[ "" ]``` | no |
 | allowed\_regions | AWS Regions allowed for use (for use with the restrict regions SCP) | `list(string)` | ```[ "" ]``` | no |
 | deny\_all | If false, create a combined policy. If true, deny all access | `bool` | `false` | no |
+| deny\_creating\_iam\_only\_users | DenyCreatingIAMUsers Only in the OU policy. | `bool` | `false` | no |
 | deny\_creating\_iam\_users | DenyCreatingIAMUsers in the OU policy. | `bool` | `false` | no |
 | deny\_deleting\_cloudwatch\_logs | DenyDeletingCloudwatchLogs in the OU policy. | `bool` | `false` | no |
 | deny\_deleting\_kms\_keys | DenyDeletingKMSKeys in the OU policy. | `bool` | `false` | no |

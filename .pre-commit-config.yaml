@@ -1,6 +1,16 @@
 repos:
+
+  - repo: https://github.com/antonbabenko/pre-commit-terraform
+    rev: v1.90.0
+    hooks:
+      - id: terraform_docs
+      - id: terraform_fmt
+      - id: terraform_tfsec
+        args:
+          - --args=--exclude-downloaded-modules --no-module-downloads
+
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v4.4.0
+    rev: v4.6.0
     hooks:
       - id: check-json
       - id: check-merge-conflict
@@ -9,32 +19,38 @@ repos:
       - id: pretty-format-json
         args:
           - --autofix
+        exclude: >
+          (?x)^(
+            package-lock.json|
+          )
       - id: trailing-whitespace
-      - id: check-symlinks
-      - id: end-of-file-fixer
-      - id: mixed-line-ending
-
-  - repo: https://github.com/executablebooks/mdformat
-    rev: 0.7.16
-    hooks:
-      - id: mdformat
-        additional_dependencies:
-          - mdformat-gfm
-          - mdformat-toc
-        # mdformat fights with terraform_docs
-        exclude: README.m(ark)?d(own)?
 
   - repo: https://github.com/igorshubovych/markdownlint-cli
-    rev: v0.33.0
+    rev: v0.40.0
     hooks:
       - id: markdownlint
+        entry: markdownlint --ignore .github/*.md
 
   - repo: https://github.com/detailyang/pre-commit-shell
     rev: 1.0.5
     hooks:
       - id: shell-lint
 
-  - repo: https://github.com/antonbabenko/pre-commit-terraform
-    rev: v1.77.1
+  - repo: https://github.com/trussworks/pre-commit-hooks
+    rev: v1.1.1
     hooks:
-      - id: terraform_fmt
+      - id: circleci-validate
+      - id: markdown-toc
+      - id: mdspell
+        exclude: >
+          (?x)^(
+            .terraform/|
+          )
+
+  - repo: local
+    hooks:
+    - id: spelling-sort
+      name: sort spelling doc
+      entry: /usr/bin/sort -u -o .spelling .spelling
+      language: script
+      pass_filenames: false

@@ -1,0 +1,74 @@
+name: Automatic Docs Generation, Formatting, Validation, and Pre-commit
+
+on:
+  pull_request:
+
+jobs:
+  docs_fmt_validation_pre_commit:
+    name: docs_fmt_validation_pre_commit
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+      with:
+        ref: ${{ github.event.pull_request.head.ref }}
+
+    - name: Render Terraform Docs inside README.md and push changes back to PR branch
+      env:
+        GH_TOKEN: ${{ secrets.ROBOT_MYMOVE_TOKEN }}
+      uses: terraform-docs/gh-actions@v1.0.0
+      with:
+        working-dir: .
+        fail-on-diff: true
+        template: |-
+          <!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
+          {{ .Content }}
+          <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
+
+    - name: Run Terraform fmt
+      uses: dflook/terraform-fmt-check@v1
+
+    - name: Spell check
+      if: ${{ github.actor != 'robot-mymove' && github.event.issue.user.login != 'dependabot[bot]' }}
+      uses: rojopolis/spellcheck-github-actions@0.30.0
+
+    - name: Validate JSON
+      if: ${{ github.actor != 'robot-mymove' && github.event.issue.user.login != 'dependabot[bot]' }}
+      uses: limitusus/json-syntax-check@v2
+      with:
+        pattern: "\\.json$"
+
+    - name: Run YAML lint
+      if: ${{ github.actor != 'robot-mymove' && github.event.issue.user.login != 'dependabot[bot]' }}
+      uses: karancode/yamllint-github-action@v2.1.1
+      with:
+        yamllint_config_datapath: yamllint-config.yml
+
+    - name: Run tfsec
+      if: ${{ github.actor != 'robot-mymove' && github.event.issue.user.login != 'dependabot[bot]' }}
+      uses: aquasecurity/tfsec-action@v1.0.0
+      with:
+        additional_args: --exclude-downloaded-modules --no-module-downloads
+
+    - name: Set up Python for pre-commit
+      uses: actions/setup-python@v3
+      with:
+        python-version: 3.9
+
+    - uses: actions/cache@v3
+      with:
+        path: ${{ env.pythonLocation }}
+        key: ${{ env.pythonLocation }}-pip-pre-commit-2.20.0
+
+    - uses: actions/cache@v3
+      with:
+        path: ~/.cache/pre-commit
+        key: ${{ runner.os }}-pre-commit-${{ hashFiles('**/.pre-commit-config.yaml') }}
+
+    - name: Run pre-commit
+      env:
+        SKIP: terraform_docs,terraform_fmt,terraform_tfsec
+      run: |
+        pip install pre-commit==2.20.0
+        pre-commit run --all-files

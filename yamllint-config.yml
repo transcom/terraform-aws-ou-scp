@@ -1,0 +1,8 @@
+rules:
+  document-start:
+    present: false
+  indentation:
+    spaces: consistent
+    indent-sequences: whatever
+  empty-lines:
+    max: 1

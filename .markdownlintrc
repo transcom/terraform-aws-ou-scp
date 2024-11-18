@@ -4,5 +4,13 @@
   "first-line-h1": false,
   "line_length": false,
   "no-multiple-blanks": false,
-  "no-inline-html": false
+  "MD024": {
+    "siblings_only": true
+  },
+  "MD014": false,
+  "MD033": false,
+  "MD046": {
+    "style": "fenced"
+  },
+  "single-trailing-newline": false
 }

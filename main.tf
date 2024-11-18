@@ -313,6 +313,11 @@ data "aws_iam_policy_document" "combined_policy_block" {
         variable = "s3:x-amz-server-side-encryption"
         values   = ["AES256", "aws:kms"]
       }
+      condition {
+        test     = "StringNotEqualsIfExists"
+        variable = "aws:PrincipalArn"
+        values   = ["arn:aws-us-gov:iam::447641181206:role/transfer_usbank", "arn:aws-us-gov:iam::469892416004:role/transfer_usbank","arn:aws-us-gov:iam::015681133840:role/transfer_usbank", "arn:aws-us-gov:iam::015932076428:role/transfer_usbank", "arn:aws-us-gov:iam::015533997236:role/transfer_usbank"]
+      }             
     }
   }
 
@@ -328,6 +333,11 @@ data "aws_iam_policy_document" "combined_policy_block" {
         variable = "s3:x-amz-server-side-encryption"
         values   = [true]
       }
+      condition {
+        test     = "StringNotEqualsIfExists"
+        variable = "aws:PrincipalArn"
+        values   = ["arn:aws-us-gov:iam::447641181206:role/transfer_usbank", "arn:aws-us-gov:iam::469892416004:role/transfer_usbank","arn:aws-us-gov:iam::015681133840:role/transfer_usbank", "arn:aws-us-gov:iam::015932076428:role/transfer_usbank", "arn:aws-us-gov:iam::015533997236:role/transfer_usbank"]
+      }         
     }
   }
 }

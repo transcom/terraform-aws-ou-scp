@@ -160,3 +160,60 @@ Install dependencies (macOS)
 brew install pre-commit go terraform terraform-docs
 pre-commit install --install-hooks
 ```
+<!-- BEGIN_TF_DOCS -->
+## Requirements
+
+| Name | Version |
+|------|---------|
+| terraform | >= 1.0 |
+| aws | >= 3.0 |
+
+## Providers
+
+| Name | Version |
+|------|---------|
+| aws | >= 3.0 |
+
+## Modules
+
+No modules.
+
+## Resources
+
+| Name | Type |
+|------|------|
+| [aws_organizations_policy.generated](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/organizations_policy) | resource |
+| [aws_organizations_policy_attachment.generated](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/organizations_policy_attachment) | resource |
+| [aws_iam_policy_document.combined_policy_block](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/iam_policy_document) | data source |
+| [aws_iam_policy_document.deny_all_access](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/iam_policy_document) | data source |
+
+## Inputs
+
+| Name | Description | Type | Default | Required |
+|------|-------------|------|---------|:--------:|
+| allowed\_ec2\_instance\_types | EC2 instances types allowed for use | `list(string)` | ```[ "" ]``` | no |
+| allowed\_regions | AWS Regions allowed for use (for use with the restrict regions SCP) | `list(string)` | ```[ "" ]``` | no |
+| deny\_all | If false, create a combined policy. If true, deny all access | `bool` | `false` | no |
+| deny\_creating\_iam\_only\_users | DenyCreatingIAMUsers Only in the OU policy. | `bool` | `false` | no |
+| deny\_creating\_iam\_users | DenyCreatingIAMUsers in the OU policy. | `bool` | `false` | no |
+| deny\_deleting\_cloudwatch\_logs | DenyDeletingCloudwatchLogs in the OU policy. | `bool` | `false` | no |
+| deny\_deleting\_kms\_keys | DenyDeletingKMSKeys in the OU policy. | `bool` | `false` | no |
+| deny\_deleting\_route53\_zones | DenyDeletingRoute53Zones in the OU policy. | `bool` | `false` | no |
+| deny\_leaving\_orgs | DenyLeavingOrgs in the OU policy. | `bool` | `false` | no |
+| deny\_root\_account | DenyRootAccount in the OU policy. | `bool` | `false` | no |
+| deny\_s3\_bucket\_public\_access\_resources | S3 bucket resource ARNs to block public access | `list(string)` | ```[ "" ]``` | no |
+| deny\_s3\_buckets\_public\_access | DenyS3BucketsPublicAccess in the OU policy. | `bool` | `false` | no |
+| limit\_ec2\_instance\_types | LimitEC2InstanceTypes in the OU policy. | `bool` | `false` | no |
+| limit\_regions | LimitRegions in the OU policy. | `bool` | `false` | no |
+| protect\_iam\_role\_resources | IAM role resource ARNs to protect from modification and deletion | `list(string)` | ```[ "" ]``` | no |
+| protect\_iam\_roles | ProtectIAMRoles in the OU policy. | `bool` | `false` | no |
+| protect\_s3\_bucket\_resources | S3 bucket resource ARNs to protect from bucket and object deletion | `list(string)` | ```[ "" ]``` | no |
+| protect\_s3\_buckets | ProtectS3Buckets in the OU policy. | `bool` | `false` | no |
+| require\_s3\_encryption | DenyIncorrectEncryptionHeader and DenyUnEncryptedObjectUploads in the OU policy | `bool` | `false` | no |
+| tags | Tags applied to the SCP policy | `map(string)` | `{}` | no |
+| target | OU resource to attach SCP | ```object({ name = string id = string })``` | n/a | yes |
+
+## Outputs
+
+No outputs.
+<!-- END_TF_DOCS -->
